@@ -37,6 +37,27 @@ Function qJSON$ (DictiJSONstring As String, DictiKey As String)
 
     Next i
 
+    colonNcount = 0: lastColonPosi = 0
+    If InStr(DictiKey, ":") Then
+        originalDictiKey$ = DictiKey
+        Do
+            colonNcount = colonNcount + 1
+            DictiKey = Mid$(originalDictiKey$, lastColonPosi, InStr(originalDictiKey$, ":"))
+            GoSub FindingKey
+            lastColonPosi = InStr(originalDictiKey$, ":") + 1
+        Loop While InStr(lastColonPosi, originalDictiKey$, ":")
+
+        DictiKey = Mid$(originalDictiKey$, lastColonPosi)
+        colonNcount = 0
+        'For i = 0 To colonNcount
+        '    dictkey = mid$(
+        '    GoSub FindingKey
+
+        'Next i
+
+    End If
+
+    FindingKey:
     Do
 
         upJSONstring$ = Mid$(upJSONstring$, InStr(upJSONstring$, Chr$(34)) + 1)
@@ -139,6 +160,8 @@ Function qJSON$ (DictiJSONstring As String, DictiKey As String)
 
         'End If
     Loop
+
+    If colonNcount Then Return
 
     qJSON = upJSONstring$
 End Function
