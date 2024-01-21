@@ -10,7 +10,8 @@ Do
     Print (qUrl$(gda$))
     'Print (qText(gda$))
     Print (qHeaders(gda$))
-    Print (qEncoding(gda$))
+    Print (qText(gda$))
+    ' q$ = "{'FirstName': 'Ayaan', 'LastName': 'Khan'}"
 Loop
 End
 
