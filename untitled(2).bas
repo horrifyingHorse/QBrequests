@@ -5,11 +5,17 @@ Open "jsonparser.txt" For Input As #1
 a$ = Input$(LOF(1), 1)
 Close #1
 
+
 Do
-    Line Input ">"; c$
-    Print qJSON(a$, c$)
+    Line Input "K>"; keyString$
+    Line Input "V>"; ValString$
+    c$ = qJSONc(keyString$, ValString$)
+    Print qJSONc("thisisKEY1", c$)
     'Input ""; c
 Loop
+
+' q
+
 
 Function qJSON$ (DictiJSONstring As String, DictiKey As String)
     chr13Value = 1
@@ -117,48 +123,6 @@ Function qJSON$ (DictiJSONstring As String, DictiKey As String)
 
         If upJSONstring$ = "" Then Exit Do
 
-
-        'If DictiKey = Left$(upJSONstring$, InStr(upJSONstring$, Chr$(34)) - 1) Then
-
-
-
-        'Else
-
-        '    upJSONstring$ = Mid$(upJSONstring$, InStr(upJSONstring$, Chr$(34)) + 1)
-
-        '    If InStr(upJSONstring$, ",") < InStr(upJSONstring$, Chr$(34)) Then
-
-        '        upJSONstring$ = Mid$(upJSONstring$, InStr(upJSONstring$, ",") + 1)
-
-        '    ElseIf Left$(upJSONstring$, 2) = ":" + Chr$(34) Then
-
-        '        upJSONstring$ = Mid$(upJSONstring$, InStr(3, upJSONstring$, Chr$(34)))
-
-
-        '    ElseIf Left$(upJSONstring$, 2) = ":{" Then
-
-        '        i = 1
-        '        Do
-        '            i = InStr(i, upJSONstring$, "}")
-        '            If i = 0 Then
-        '                Print ("Err")
-        '                Exit Do
-        '            End If
-
-        '            numOFopeningCurly = cntNstrinstr(upJSONstring$, "{", "", i)
-        '            numOFclosingCurly = cntNstrinstr(upJSONstring$, "}", "", i) + 1
-
-        '            If numOFopeningCurly = numOFclosingCurly Then
-        '                Exit Do
-        '            End If
-
-        '        Loop
-
-        '        upJSONstring$ = Mid$(upJSONstring$, i + 1)
-
-        '    End If
-
-        'End If
     Loop
 
     If colonNcount Then Return
@@ -186,4 +150,59 @@ Function cntNstrinstr (cntNstrinstr1 As String, cntNstrinstr2 As String, cntNstr
     End If
 
     cntNstrinstr = cntNstrinstr4
+End Function
+
+Function qJSONc$ (KeyString As String, ValueString As String)
+    queryString$ = KeyString: GoSub count
+    keyStringColon = count
+    queryString$ = ValueString: GoSub count
+
+    If keyStringColon <> count Then
+        Print "err"
+        Exit Function
+    End If
+
+    cr8JSON$ = "{": lKColonNpos = 0: lVColonNpos = 0
+    For i = 0 To count
+        __AddedQuote$ = Chr$(34)
+
+        If InStr(lKColonNpos, KeyString, ":") Then
+            ithKey$ = _Trim$(Mid$(KeyString, lKColonNpos, InStr(lKColonNpos, KeyString, ":") - lKColonNpos))
+            ithVal$ = _Trim$(Mid$(ValueString, lVColonNpos, InStr(lVColonNpos, ValueString, ":") - lVColonNpos))
+
+
+            lKColonNpos = InStr(lKColonNpos, KeyString, ":") + 1
+            lVColonNpos = InStr(lVColonNpos, ValueString, ":") + 1
+
+            __AddedComma$ = ", "
+        Else
+
+            ithKey$ = _Trim$(Mid$(KeyString, lKColonNpos))
+            ithVal$ = _Trim$(Mid$(ValueString, lVColonNpos))
+            __AddedComma$ = "}"
+        End If
+
+        If Left$(ithVal$, 1) = "{" Then __AddedQuote$ = ""
+
+
+        cr8JSON$ = cr8JSON$ + Chr$(34) + ithKey$ + Chr$(34) + ": " + __AddedQuote$ + ithVal$ + __AddedQuote$ + __AddedComma$
+    Next i
+
+    qJSONc = cr8JSON$
+
+    Exit Function
+
+    count:
+    count = 0: lColonNpos = 0
+
+    Do While InStr(lColonNpos, queryString$, ":")
+        lColonNpos = InStr(lColonNpos, queryString$, ":") + 1
+        numOFopeningCurly = cntNstrinstr(queryString$, "{", "", lColonNpos)
+        numOFclosingCurly = cntNstrinstr(queryString$, "}", "", lColonNpos)
+
+        If numOFopeningCurly = numOFclosingCurly Then
+            count = count + 1
+        End If
+    Loop
+    Return
 End Function

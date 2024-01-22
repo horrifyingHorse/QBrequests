@@ -1,0 +1,19 @@
+*   Trying 3.224.157.95:80...
+* Connected to httpbin.org (3.224.157.95) port 80
+> GET /post HTTP/1.1
+> Host: httpbin.org
+> User-Agent: curl/8.4.0
+> Accept: */*
+> 
+< HTTP/1.1 405 METHOD NOT ALLOWED
+< Date: Sun, 21 Jan 2024 21:19:32 GMT
+< Content-Type: text/html
+< Content-Length: 178
+< Connection: keep-alive
+< Server: gunicorn/19.9.0
+< Allow: POST, OPTIONS
+< Access-Control-Allow-Origin: *
+< Access-Control-Allow-Credentials: true
+< 
+{ [178 bytes data]
+* Connection #0 to host httpbin.org left intact

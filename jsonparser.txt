@@ -1,0 +1,6 @@
+{
+"number1": 1, "number-2": "3 hehe",
+  "args": {},
+"headers":{"Accept":"*/*","Host":"httpbin.org","User-Agent":"curl/8.4.0","X-Amzn-Trace-Id":"Root=1-65acab15-603e745901fe6c980b99b2ab"},
+  "origin": "49.36.32.83",
+  "url": "http://httpbin.org/get","number":25,"lol":"gg","l":{"n1":123}}
